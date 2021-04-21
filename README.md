@@ -142,3 +142,8 @@ The building script from `assets/build.sh` will be executed inside the container
 - build apriltag library from submodule `apriltags/` (will produce a .so library file)
 - build python wheel (the .so library is embedded as `package_data`)
 - copy wheel file to `/out` (will pop up in `dist/` outside the container)
+
+### Testing
+Install test dependencies with `pip install -r test/requirements.txt`.
+
+Run test with `python test/test.py`

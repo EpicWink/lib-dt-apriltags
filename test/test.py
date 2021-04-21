@@ -2,7 +2,7 @@ from dt_apriltags import Detector
 import numpy
 import os
 
-test_images_path = 'test_files'
+test_images_path = os.path.split(__file__)[0] + '/test_files'
 
 visualization = False
 try:
@@ -76,7 +76,7 @@ print("\n\nTESTING WITH ROTATION IMAGES")
 time_num = 0
 time_sum = 0
 
-test_images_path = 'test_files'
+test_images_path = os.path.split(__file__)[0] + '/test_files'
 image_names = parameters['rotation_test']['files']
 
 for image_name in image_names:
