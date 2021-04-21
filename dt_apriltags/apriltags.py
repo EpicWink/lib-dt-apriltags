@@ -15,6 +15,8 @@ from __future__ import division
 from __future__ import print_function
 
 import ctypes
+import dataclasses
+import typing as t
 import os
 import numpy
 
@@ -161,50 +163,20 @@ def zarray_get(za, idx, ptr):
 ######################################################################
 
 
+@dataclasses.dataclass
 class Detection:
-
     """Combined pythonic wrapper for apriltag_detection and apriltag_pose"""
 
-    def __init__(self):
-        self.tag_family = None
-        self.tag_id = None
-        self.hamming = None
-        self.decision_margin = None
-        self.homography = None
-        self.center = None
-        self.corners = None
-        self.pose_R = None
-        self.pose_t = None
-        self.pose_err = None
-
-    def __str__(self):
-        return (
-            "Detection object:"
-            + "\ntag_family = "
-            + str(self.tag_family)
-            + "\ntag_id = "
-            + str(self.tag_id)
-            + "\nhamming = "
-            + str(self.hamming)
-            + "\ndecision_margin = "
-            + str(self.decision_margin)
-            + "\nhomography = "
-            + str(self.homography)
-            + "\ncenter = "
-            + str(self.center)
-            + "\ncorners = "
-            + str(self.corners)
-            + "\npose_R = "
-            + str(self.pose_R)
-            + "\npose_t = "
-            + str(self.pose_t)
-            + "\npose_err = "
-            + str(self.pose_err)
-            + "\n"
-        )
-
-    def __repr__(self):
-        return self.__str__()
+    tag_family: bytes
+    tag_id: t.Any
+    hamming: t.Any
+    decision_margin: t.Any
+    homography: t.Any
+    center: t.Any
+    corners: t.Any
+    pose_R: t.Any = None
+    pose_t: t.Any = None
+    pose_err: t.Any = None
 
 
 ######################################################################
@@ -427,14 +399,15 @@ class Detector(object):
             center = numpy.ctypeslib.as_array(tag.c, shape=(2,)).copy()
             corners = numpy.ctypeslib.as_array(tag.p, shape=(4, 2)).copy()
 
-            detection = Detection()
-            detection.tag_family = ctypes.string_at(tag.family.contents.name)
-            detection.tag_id = tag.id
-            detection.hamming = tag.hamming
-            detection.decision_margin = tag.decision_margin
-            detection.homography = homography
-            detection.center = center
-            detection.corners = corners
+            detection = Detection(
+                tag_family=ctypes.string_at(tag.family.contents.name),
+                tag_id=tag.id,
+                hamming=tag.hamming,
+                decision_margin=tag.decision_margin,
+                homography=homography,
+                center=center,
+                corners=corners,
+            )
 
             if estimate_tag_pose:
                 if camera_params is None:
